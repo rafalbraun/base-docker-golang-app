@@ -1,9 +1,9 @@
-create table gorm.posts (
-	post_id INT(6) unsigned auto_increment primary key, 
-	post_content VARCHAR(100), 
-	publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- TODO - log warnings and errors
+
+create table if not exists gorm.database_sessions (
+	session_id INT unsigned auto_increment primary key, 
+	session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-insert into gorm.posts (post_content) values ('aaaaaaaaaa');
-insert into gorm.posts (post_content) values ('bbbbbbbbbb');
+insert into gorm.database_sessions () values ();
 

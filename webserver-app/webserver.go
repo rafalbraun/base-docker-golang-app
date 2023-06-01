@@ -11,10 +11,11 @@ import (
 	"strconv"
 	"text/template"
 	"time"
+	"os"
 )
 
 /********************************************************
-	model
+model
 */
 
 type Post struct {
@@ -30,7 +31,7 @@ type PageData struct {
 }
 
 /********************************************************
-	controller
+controller
 */
 
 // Controller holds all the variables needed for routes to perform their logic
@@ -39,7 +40,7 @@ type Controller struct {
 }
 
 // New creates a new instance of the routes.Controller
-func NewController(db *gorm.DB) Controller {
+func newController(db *gorm.DB) Controller {
 	return Controller{
 		db: db,
 	}
@@ -55,24 +56,39 @@ func check(e error) {
 	}
 }
 
-func ConnectToDatabase() *gorm.DB {
-	dsn := "gorm:gorm@tcp(127.0.0.1:9910)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
+type Config struct {
+	DatabaseHost      string
+}
+
+func loadEnv() (c Config, err error) {
+	c.DatabaseHost = os.Getenv("DATABASE_HOST")
+	//c.DatabaseHost = "127.0.0.1"
+	return c, nil
+}
+
+func connectToDatabase(c Config) (db *gorm.DB, err error) {
+	if (c.DatabaseHost == "") {
+		log.Println("gorm.Open database host not defined", err)
+		return nil, err
+	}
+	dsn := fmt.Sprintf("gorm:gorm@tcp(%s:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local", c.DatabaseHost)
+	//dsn := "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
 	//dsn := "gorm:gorm@tcp(godockerDB:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("gorm.Open error", err)
-		panic(err)
+		return nil, err
 	}
 
 	// Migrate the schema
 	db.AutoMigrate(&Post{})
 	if err != nil {
 		log.Println("gorm.Open could not migrate models", err)
-		panic(err)
+		return nil, err
 	}
 
 	log.Println("Successfully connected! Server is up ...")
-	return db
+	return db, nil
 }
 
 func (c Controller) getPost(w http.ResponseWriter, r *http.Request) {
@@ -132,18 +148,28 @@ https://gowebexamples.com/templates/
 func main() {
 	r := mux.NewRouter()
 
+	conf, err := loadEnv()
+	if err != nil {
+		log.Println("main.loadEnv could not load env variables", err)
+		panic(err)
+	}
+
 	// We connect to the database using the configuration generated from the environment variables.
-	db := ConnectToDatabase()
+	db, err := connectToDatabase(conf)
+	if err != nil {
+		log.Println("gorm.Open could not connect to database", err)
+		panic(err)
+	}
 
 	// A new instance of controller is created
-	controller := NewController(db)
+	controller := newController(db)
 
 	r.Use(mux.CORSMethodMiddleware(r))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	r.HandleFunc("/posts", controller.getPosts).Methods(http.MethodGet)
 	r.HandleFunc("/post/{id:[0-9]+}", controller.getPost).Methods(http.MethodGet)
 	r.HandleFunc("/post_create", controller.createPost).Methods(http.MethodGet, http.MethodPost)
-	r.HandleFunc ("/status", controller.status).Methods(http.MethodGet)
+	r.HandleFunc("/status", controller.status).Methods(http.MethodGet)
 
 	http.ListenAndServe(":8080", r)
 }

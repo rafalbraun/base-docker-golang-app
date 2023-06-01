@@ -9,6 +9,7 @@ FROM golang:1.16-alpine
 ## files
 RUN mkdir /app
 RUN mkdir -p /app/templates
+RUN mkdir -p /app/static
 
 ## We copy everything in the root directory
 ## into our /app directory
@@ -16,7 +17,10 @@ RUN mkdir -p /app/templates
 COPY go.mod /app
 COPY go.sum /app
 COPY webserver.go /app
-COPY templates/* /templates
+
+## copy templates adn static files
+ADD static /app/static
+ADD templates /app/templates
 
 ##COPY post.html /app
 ##COPY create_post.html /app
