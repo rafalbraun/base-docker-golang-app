@@ -1,0 +1,17 @@
+<html>
+<head>
+      <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<nav>
+  <a href="/posts">Posts</a> |
+  <a href="/post_create">Create Post</a>
+</nav>
+
+	<h2>Post {{.Post.Id}}</h2>
+	created at: {{.Post.CreatedAt}}<br>
+	content: {{.Post.Content}}
+</body>
+</html>
+

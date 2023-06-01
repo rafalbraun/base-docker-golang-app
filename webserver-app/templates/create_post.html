@@ -1,0 +1,20 @@
+<html>
+<head>
+      <title>{{.PageTitle}}</title>
+      <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<nav>
+  <a href="/posts">Posts</a> |
+  <a href="/post_create">Create Post</a>
+</nav>
+
+	<h2>{{.PageTitle}}</h2>
+	<form action="/post_create" method="post">
+		<textarea name="content" value="" rows="5"></textarea>
+		<input type="submit" value="Submit">
+	</form>
+</body>
+</html>
+

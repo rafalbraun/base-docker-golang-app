@@ -1,0 +1,21 @@
+table, th, td {
+border: 1px solid black;
+}
+td {
+text-align: center;
+}
+body {
+width: 800px;
+margin-left: auto;
+margin-right: auto;
+}
+table {
+width:100%;
+}
+textarea {
+  width:100%;
+  resize:vertical;
+}
+input[type=submit] {
+  float:right;
+}

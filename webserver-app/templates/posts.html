@@ -1,0 +1,30 @@
+<html>
+   <head>
+      <title>{{.PageTitle}}</title>
+      <link rel="stylesheet" href="/static/style.css" />
+   </head>
+   <body>
+
+<nav>
+  <a href="/posts">Posts</a> |
+  <a href="/post_create">Create Post</a>
+</nav>
+
+      <h2>{{.PageTitle}}</h2>
+      <table>
+         <tr>
+            <th>post_id</th>
+            <th>post_contents</th>
+            <th>publish_date</th>
+         </tr>
+         {{range .Posts}}
+         <tr>
+            <td>{{.Id}}</td>
+            <td>{{.Content}}</td>
+            <td>{{.CreatedAt}}</td>
+            <td><a href="/post/{{.Id}}">link</a></td>
+         </tr>
+         {{end}}
+      </table>
+   </body>
+</html>
