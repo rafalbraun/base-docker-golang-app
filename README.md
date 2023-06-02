@@ -14,5 +14,7 @@
 `docker-compose build` or `docker-compose up --build`.
 
 ## launch locally
-`docker-compose up mysql-baseapp`
-`make run`
+```
+docker-compose up mysql-baseapp`
+make run
+```
