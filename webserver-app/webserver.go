@@ -62,7 +62,6 @@ type Config struct {
 
 func loadEnv() (c Config, err error) {
 	c.DatabaseHost = os.Getenv("DATABASE_HOST")
-	//c.DatabaseHost = "127.0.0.1"
 	return c, nil
 }
 
@@ -72,8 +71,6 @@ func connectToDatabase(c Config) (db *gorm.DB, err error) {
 		return nil, err
 	}
 	dsn := fmt.Sprintf("gorm:gorm@tcp(%s:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local", c.DatabaseHost)
-	//dsn := "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
-	//dsn := "gorm:gorm@tcp(godockerDB:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("gorm.Open error", err)
