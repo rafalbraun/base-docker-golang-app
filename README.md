@@ -1,8 +1,8 @@
 ## connect to host via ssh
-`ssh -p 22 debian@IP_ADDRESS`
+`ssh -p 22 USERNAME@HOSTNAME`
 
 ## deploy (copy files) via scp
-`sshpass -p PASSWORD scp -r ./* USERNAME@IP_ADDRESS:/home/username`
+`sshpass -p PASSWORD scp -r ./* USERNAME@HOSTNAME:/home/username`
 `docker-compose up`
 
 ## log into container
