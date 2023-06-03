@@ -6,7 +6,7 @@
 `docker-compose up`
 
 ## log into container
-`docker exec -it godockerDB /bin/sh`
+`docker exec -it CONTAINER /bin/sh`
 
 ## log into database locally
 `mysql -h localhost -u gorm -p gorm --default-character-set=cp850`
